@@ -16,10 +16,21 @@ Local setup
 1) Install pnpm (https://pnpm.io/installation).
 2) Install dependencies:
    pnpm install
-3) Create environment file:
+3) Create environment file (macOS/Linux):
    cp .env.example .env
+
+   Windows PowerShell:
+   Copy-Item .env.example .env
+
+   For the web app env file:
+   Copy-Item apps/web/.env.example apps/web/.env.local
 4) Run the web app:
    pnpm dev
 
+Auth flow check
+- Sign up: http://localhost:3000/auth/sign-up
+- Sign in: http://localhost:3000/auth/sign-in
+- Protected app page: http://localhost:3000/app
+
 Notes
-- No Supabase keys are committed. Use .env for local values.
+- No Supabase keys are committed. Use .env and apps/web/.env.local for local values.
