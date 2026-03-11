@@ -1,0 +1,25 @@
+Coreprep monorepo
+
+Overview
+- Product: exam-prep for Morocco.
+- Phase 1: Concours QCM fully working.
+- BAC (exercise-based) is planned next; data model must allow it.
+
+Structure
+- apps/web: Next.js + TypeScript web app.
+- packages/core: adaptive engine placeholder.
+- packages/content: import/seed tools placeholder.
+- supabase/migrations: database migrations.
+- supabase/seed: seed data scripts.
+
+Local setup
+1) Install pnpm (https://pnpm.io/installation).
+2) Install dependencies:
+   pnpm install
+3) Create environment file:
+   cp .env.example .env
+4) Run the web app:
+   pnpm dev
+
+Notes
+- No Supabase keys are committed. Use .env for local values.

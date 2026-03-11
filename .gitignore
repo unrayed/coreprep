@@ -5,8 +5,20 @@
 
 # node
 node_modules
+.pnpm-store
 .next
 dist
+out
+coverage
 
 # logs
 *.log
+
+# tooling
+.turbo
+.vercel
+.DS_Store
+
+# supabase
+supabase/.temp
+supabase/.branches
