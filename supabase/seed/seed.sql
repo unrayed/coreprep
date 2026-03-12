@@ -81,3 +81,12 @@ from public.items i
 join public.tags t on t.slug = 'culture-generale'
 where i.subject = 'Culture Générale'
 on conflict do nothing;
+
+-- ── Populate qcm_answer_keys from item_choices ───────────────
+-- Must run AFTER item_choices rows are inserted.
+-- One row per item pointing to the correct choice.
+insert into public.qcm_answer_keys (item_id, correct_choice_id)
+select item_id, id
+from   public.item_choices
+where  is_correct = true
+on conflict (item_id) do nothing;

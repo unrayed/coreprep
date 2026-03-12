@@ -1,21 +1,25 @@
+import Link from "next/link";
 import { createClient } from "../../lib/supabase/server";
-import { redirect } from "next/navigation";
+import { layoutStyles } from "./styles";
 
 export default async function AppHomePage() {
   const supabase = await createClient();
   const { data } = await supabase.auth.getUser();
 
-  if (!data.user) {
-    redirect("/auth/sign-in");
-  }
-
   return (
-    <main style={{ padding: "2rem", fontFamily: "system-ui" }}>
-      <h1>Espace app</h1>
-      <p>Bienvenue {data.user.email}</p>
-      <form action="/auth/sign-out" method="post">
-        <button type="submit">Se déconnecter</button>
-      </form>
-    </main>
+    <section style={layoutStyles.card}>
+      <h2 style={{ marginTop: 0 }}>Bienvenue {data.user?.email}</h2>
+      <p style={{ color: "#5b6374" }}>
+        Choisissez une option pour commencer votre session de révision.
+      </p>
+      <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+        <Link href="/app/pratique" style={layoutStyles.button}>
+          Pratiquer un QCM
+        </Link>
+        <Link href="/app/historique" style={layoutStyles.buttonSecondary}>
+          Voir l'historique
+        </Link>
+      </div>
+    </section>
   );
 }
