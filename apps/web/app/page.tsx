@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import Link from "next/link";
 import { createClient } from "../lib/supabase/server";
 
@@ -7,14 +8,14 @@ export const metadata = {
     "Préparez les concours marocains avec des QCM interactifs. Entraînez-vous, suivez vos progrès et progressez à votre rythme."
 };
 
-const card: React.CSSProperties = {
+const card: CSSProperties = {
   background: "white",
   borderRadius: 16,
   padding: "2rem",
   boxShadow: "0 10px 30px rgba(31,36,48,0.08)"
 };
 
-const btn: React.CSSProperties = {
+const btn: CSSProperties = {
   display: "inline-block",
   background: "#1f6feb",
   color: "white",
@@ -26,7 +27,7 @@ const btn: React.CSSProperties = {
   cursor: "pointer"
 };
 
-const btnOutline: React.CSSProperties = {
+const btnOutline: CSSProperties = {
   display: "inline-block",
   background: "white",
   color: "#1f2430",

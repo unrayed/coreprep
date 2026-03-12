@@ -3,17 +3,45 @@ import { layoutStyles } from "../styles";
 
 export const dynamic = "force-dynamic";
 
+type ItemJoin = {
+  prompt: string;
+  subject: string;
+  exam: string;
+  year: number | null;
+};
+
+type ChoiceJoin = {
+  label: string;
+  body: string;
+};
+
+type AttemptRow = {
+  id: string;
+  is_correct: boolean;
+  created_at: string;
+  item: ItemJoin | ItemJoin[] | null;
+  chosen_choice: ChoiceJoin | ChoiceJoin[] | null;
+};
+
+function firstOrNull<T>(val: T | T[] | null): T | null {
+  if (val === null) return null;
+  if (Array.isArray(val)) return val[0] ?? null;
+  return val;
+}
+
 export default async function HistoriquePage() {
   const supabase = await createClient();
   const { data: authData } = await supabase.auth.getUser();
 
-  const { data: attempts, error } = await supabase
+  const { data, error } = await supabase
     .from("attempts")
     .select(
       "id, is_correct, created_at, item:items(prompt, subject, exam, year), chosen_choice:item_choices(label, body)"
     )
     .order("created_at", { ascending: false })
     .limit(50);
+
+  const attempts = (data ?? []) as AttemptRow[];
 
   return (
     <section style={layoutStyles.card}>
@@ -24,19 +52,22 @@ export default async function HistoriquePage() {
 
       {error ? (
         <p style={{ color: "#b91c1c" }}>
-          Impossible de charger l'historique : {error.message}
+          Impossible de charger l&apos;historique : {error.message}
         </p>
       ) : null}
 
-      {!attempts || attempts.length === 0 ? (
+      {attempts.length === 0 ? (
         <p style={{ color: "#5b6374" }}>Aucune tentative enregistrée.</p>
       ) : (
         <div style={{ display: "grid", gap: "1rem", marginTop: "1.5rem" }}>
           {attempts.map((attempt) => {
+            const item = firstOrNull(attempt.item);
+            const choice = firstOrNull(attempt.chosen_choice);
             const when = new Date(attempt.created_at).toLocaleString("fr-FR", {
               dateStyle: "medium" as const,
               timeStyle: "short" as const
             });
+
             return (
               <article
                 key={attempt.id}
@@ -55,24 +86,20 @@ export default async function HistoriquePage() {
                       color: attempt.is_correct ? "#15803d" : "#b91c1c"
                     }}
                   >
-                    {attempt.is_correct ? "Correct" : "Incorrect"}
+                    {attempt.is_correct ? "✓ Correct" : "✗ Incorrect"}
                   </span>
                 </div>
                 <h3 style={{ margin: "0.75rem 0 0" }}>
-                  {attempt.item?.prompt ?? "Question supprimée"}
+                  {item?.prompt ?? "Question supprimée"}
                 </h3>
                 <p style={{ color: "#5b6374", marginTop: "0.35rem" }}>
-                  {attempt.item
-                    ? `${attempt.item.subject} · ${attempt.item.exam}${
-                        attempt.item.year ? ` · ${attempt.item.year}` : ""
-                      }`
+                  {item
+                    ? `${item.subject} · ${item.exam}${item.year ? ` · ${item.year}` : ""}`
                     : ""}
                 </p>
                 <p style={{ marginTop: "0.75rem" }}>
                   <strong>Votre réponse :</strong>{" "}
-                  {attempt.chosen_choice
-                    ? `${attempt.chosen_choice.label}. ${attempt.chosen_choice.body}`
-                    : "Aucune"}
+                  {choice ? `${choice.label}. ${choice.body}` : "Aucune"}
                 </p>
               </article>
             );
