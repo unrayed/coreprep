@@ -1,6 +1,5 @@
 import { createClient } from "../../../lib/supabase/server";
 import PracticeForm from "./PracticeForm";
-import { submitQcmAttempt } from "./actions";
 
 export const dynamic = "force-dynamic";
 
@@ -102,7 +101,7 @@ export default async function PracticePage() {
 
   return (
     <section>
-      <PracticeForm item={item} choices={choices} submitAction={submitQcmAttempt} />
+      <PracticeForm item={item} choices={choices} />
     </section>
   );
 }

@@ -3,22 +3,6 @@ import { layoutStyles } from "../styles";
 
 export const dynamic = "force-dynamic";
 
-type AttemptRow = {
-  id: string;
-  is_correct: boolean;
-  created_at: string;
-  item: {
-    prompt: string;
-    subject: string;
-    exam: string;
-    year: number | null;
-  } | null;
-  chosen_choice: {
-    label: string;
-    body: string;
-  } | null;
-};
-
 export default async function HistoriquePage() {
   const supabase = await createClient();
   const { data: authData } = await supabase.auth.getUser();
@@ -50,8 +34,8 @@ export default async function HistoriquePage() {
         <div style={{ display: "grid", gap: "1rem", marginTop: "1.5rem" }}>
           {attempts.map((attempt) => {
             const when = new Date(attempt.created_at).toLocaleString("fr-FR", {
-              dateStyle: "medium",
-              timeStyle: "short"
+              dateStyle: "medium" as const,
+              timeStyle: "short" as const
             });
             return (
               <article

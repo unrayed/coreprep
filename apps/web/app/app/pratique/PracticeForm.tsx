@@ -2,18 +2,19 @@
 
 import { useEffect, useRef } from "react";
 import { useFormState, useFormStatus } from "react-dom";
+import { submitQcmAttempt } from "./actions";
 import type { SubmitState } from "./actions";
 import { layoutStyles } from "../styles";
 
 const initialState: SubmitState = { status: "idle" };
 
-type Choice = {
+export type Choice = {
   id: string;
   label: string;
   body: string;
 };
 
-type Item = {
+export type Item = {
   id: string;
   subject: string;
   exam: string;
@@ -24,10 +25,6 @@ type Item = {
 type PracticeFormProps = {
   item: Item;
   choices: Choice[];
-  submitAction: (
-    prevState: SubmitState,
-    formData: FormData
-  ) => Promise<SubmitState>;
 };
 
 function SubmitButton() {
@@ -39,12 +36,8 @@ function SubmitButton() {
   );
 }
 
-export default function PracticeForm({
-  item,
-  choices,
-  submitAction
-}: PracticeFormProps) {
-  const [state, formAction] = useFormState(submitAction, initialState);
+export default function PracticeForm({ item, choices }: PracticeFormProps) {
+  const [state, formAction] = useFormState(submitQcmAttempt, initialState);
   const startRef = useRef(Date.now());
   const durationInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -116,9 +109,7 @@ export default function PracticeForm({
       </div>
 
       {state.status === "error" ? (
-        <p style={{ color: "#dc2626", marginTop: "1rem" }}>
-          {state.message}
-        </p>
+        <p style={{ color: "#dc2626", marginTop: "1rem" }}>{state.message}</p>
       ) : null}
 
       {state.status === "success" ? (
@@ -130,19 +121,16 @@ export default function PracticeForm({
             }}
           >
             {state.isCorrect
-              ? "Bonne réponse !"
-              : "Réponse incorrecte. Révise la correction ci-dessus."}
+              ? "✓ Bonne réponse !"
+              : "✗ Réponse incorrecte. La bonne option est surlignée en vert."}
           </strong>
-          <p style={{ color: "#5b6374", marginTop: "0.5rem" }}>
-            La bonne option est surlignée en vert.
-          </p>
         </div>
       ) : null}
 
-      <div style={{ marginTop: "1.5rem", display: "flex", gap: "0.75rem" }}>
-        <SubmitButton />
-        <a href="/app/pratique" style={layoutStyles.buttonSecondary}>
-          Nouvelle question
+      <div style={{ marginTop: "1.5rem", display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
+        {state.status !== "success" && <SubmitButton />}
+        <a href="/app/pratique" style={{ ...layoutStyles.buttonSecondary, textDecoration: "none" }}>
+          {state.status === "success" ? "Question suivante →" : "Autre question"}
         </a>
       </div>
     </form>

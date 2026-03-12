@@ -13,10 +13,10 @@ export default async function AppHomePage() {
         Choisissez une option pour commencer votre session de révision.
       </p>
       <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-        <Link href="/app/pratique" style={layoutStyles.button}>
+        <Link href="/app/pratique" style={{ ...layoutStyles.button, textDecoration: "none" }}>
           Pratiquer un QCM
         </Link>
-        <Link href="/app/historique" style={layoutStyles.buttonSecondary}>
+        <Link href="/app/historique" style={{ ...layoutStyles.buttonSecondary, textDecoration: "none" }}>
           Voir l'historique
         </Link>
       </div>
